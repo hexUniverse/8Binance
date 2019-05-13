@@ -34,7 +34,7 @@ def binance(bot, update):
             update.message.text = real_url.url
     if validators.url(update.message.text) != True:
         return
-    pattern = '(binance)'
+    pattern = '(binance|exhangecenter)'
     result = re.findall(pattern, update.message.text)
     if result:
         try:
