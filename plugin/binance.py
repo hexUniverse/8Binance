@@ -31,8 +31,9 @@ def binance(bot, update):
             if real_url.status_code != 200:
                 return
             update.message.text = real_url.url
-
-    pattern = '(binance.2019event.top|binance.com|binance)'
+    if validators.url(update.message.text) != True:
+        return
+    pattern = '(binance)'
     result = re.findall(pattern, update.message.text)
     if result:
         try:
