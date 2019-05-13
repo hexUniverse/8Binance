@@ -27,9 +27,10 @@ def binance(bot, update):
     result = re.findall(pattern, unescape(update.message.text_html))
     for x in result:
         if x:
-            real_url = requests.get(f'http://t.cn/{x[1]}')
-            if real_url.status_code != 200:
-                return
+            try:
+                real_url = requests.get(f'http://t.cn/{x[1]}')
+            except requests.exceptions.ConnectionError as e:
+                update.message.text = f"http://{e.args[0].pool.host}"
             update.message.text = real_url.url
     if validators.url(update.message.text) != True:
         return
