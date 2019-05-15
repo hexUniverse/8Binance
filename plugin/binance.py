@@ -29,9 +29,9 @@ def binance(bot, update):
     for x in result:
         if x:
             try:
-            req = requests.get(
-                f'http://t.cn/{x[1]}', allow_redirects=False)
-            real_url = req.headers['Location']
+                req = requests.get(
+                    f'http://t.cn/{x[1]}', allow_redirects=False)
+                real_url = req.headers['Location']
             except requests.exceptions.ConnectionError as e:
                 update.message.text = f"http://{e.args[0].pool.host}"
             else:
