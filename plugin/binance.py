@@ -3,6 +3,7 @@ import time
 from html import unescape
 
 import requests
+import validators
 
 import telegram
 from telegram.ext import run_async
