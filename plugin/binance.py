@@ -28,13 +28,18 @@ def binance(bot, update):
     for x in result:
         if x:
             try:
-                real_url = requests.get(f'http://t.cn/{x[1]}')
+            req = requests.get(
+                f'http://t.cn/{x[1]}', allow_redirects=False)
+            real_url = req.headers['Location']
             except requests.exceptions.ConnectionError as e:
                 update.message.text = f"http://{e.args[0].pool.host}"
-            update.message.text = real_url.url
+            else:
+                # if real_url.status_code != 200:
+                #    return
+                update.message.text = real_url
     if validators.url(update.message.text) != True:
         return
-    pattern = '(binance|exhangecenter)'
+    pattern = '(binance|exhangecenter|marketrelease)'
     result = re.findall(pattern, update.message.text)
     if result:
         try:
