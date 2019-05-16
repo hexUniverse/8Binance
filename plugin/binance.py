@@ -38,39 +38,46 @@ def binance(bot, update):
                 # if real_url.status_code != 200:
                 #    return
                 update.message.text = real_url
-    if validators.url(update.message.text) != True:
-        return
-    pattern = '(binance|exhangecenter|marketrelease)'
-    result = re.findall(pattern, update.message.text)
-    if result:
-        try:
+    ### EXTRACT URL ###
+    pattern = 'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+'
+    extrac = re.findall(pattern, update.message.text)
+    ### EXTRACT URL ###
+    for url in extrac:
+        update.message.text = url
+        if validators.url(update.message.text) != True:
+            return
+        pattern = '(binance|exhangecenter|marketrelease)'
+        result = re.findall(pattern, update.message.text)
+        if result:
             try:
-                update.message.delete()
-            except:
-                pass
-            bot.restrict_chat_member(update.message.chat_id, update.message.from_user.id, can_send_messages=None,
-                                     can_send_media_messages=None, can_send_other_messages=None, can_add_web_page_previews=None)
-        except BadRequest as e:
-            if e.message == 'Not enough rights to restrict/unrestrict chat member':
+                try:
+                    update.message.delete()
+                except:
+                    pass
+                bot.restrict_chat_member(update.message.chat_id, update.message.from_user.id, can_send_messages=None,
+                                         can_send_media_messages=None, can_send_other_messages=None, can_add_web_page_previews=None)
+            except BadRequest as e:
                 if e.message == 'Not enough rights to restrict/unrestrict chat member':
-                    sent = update.message.reply_text(
-                        '偵測到 <code>Spam_Binance_URL</code>\n權限不足無法正常處置(´･ω･`)', parse_mode='html').result()
-                    time.sleep(10)
-                    bot.delete_message(update.message.chat_id, sent.message_id)
-                    return
-        else:
-            tmp_text = '偵測到 <code>Spam_Binance_URL</code>\n' \
-                f'{update.message.from_user.mention_html()} 在和 <code>hexlightning</code> 戰鬥時被燒掉了自己的魔書，因而只能<code>永久</code>退出這場戰鬥。\n若有誤判請至 @hexjudge 申請。'
-            sent = update.message.reply_text(
-                tmp_text, parse_mode='html').result()
-            time.sleep(10)
-            bot.delete_message(update.message.chat_id, sent.message_id)
+                    if e.message == 'Not enough rights to restrict/unrestrict chat member':
+                        sent = update.message.reply_text(
+                            '偵測到 <code>Spam_Binance_URL</code>\n權限不足無法正常處置(´･ω･`)', parse_mode='html').result()
+                        time.sleep(10)
+                        bot.delete_message(
+                            update.message.chat_id, sent.message_id)
+                        return
+            else:
+                tmp_text = '偵測到 <code>Spam_Binance_URL</code>\n' \
+                    f'{update.message.from_user.mention_html()} 在和 <code>hexlightning</code> 戰鬥時被燒掉了自己的魔書，因而只能<code>永久</code>退出這場戰鬥。\n若有誤判請至 @hexjudge 申請。'
+                sent = update.message.reply_text(
+                    tmp_text, parse_mode='html').result()
+                time.sleep(10)
+                bot.delete_message(update.message.chat_id, sent.message_id)
 
-        try:
-            bot.kick_chat_member(update.message.chat_id,
-                                 update.message.from_user.id)
-        except BadRequest as e:
-            sent = update.message.reply_text(
-                '偵測到 <code>Spam_Binance_URL</code>\n權限不足無法正常處置(´･ω･`)', parse_mode='html').result()
-            time.sleep(5)
-            bot.delete_message(update.message.chat_id, sent.message_id)
+            try:
+                bot.kick_chat_member(update.message.chat_id,
+                                     update.message.from_user.id)
+            except BadRequest as e:
+                sent = update.message.reply_text(
+                    '偵測到 <code>Spam_Binance_URL</code>\n權限不足無法正常處置(´･ω･`)', parse_mode='html').result()
+                time.sleep(5)
+                bot.delete_message(update.message.chat_id, sent.message_id)
