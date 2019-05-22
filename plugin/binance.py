@@ -46,7 +46,7 @@ def binance(bot, update):
         update.message.text = url
         if validators.url(update.message.text) != True:
             return
-        pattern = '(binance|exhangecenter|marketrelease|zendesk|dex2019)'
+        pattern = '(binance|exhangecenter|marketrelease|zendesk|dex2019|dextestnet)'
         result = re.findall(pattern, update.message.text)
         if result:
             try:
